@@ -1,14 +1,17 @@
 package fr.avahip.apifcchamptracker.dto;
 
+import fr.avahip.apifcchamptracker.entity.Player;
 import fr.avahip.apifcchamptracker.generic.dto.BaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class TeamDto extends BaseDto implements Serializable {
+public class TeamDto extends BaseDto {
     String name;
-    int week;
+    LocalDateTime createdAt;
+    List<Player> players;
 }

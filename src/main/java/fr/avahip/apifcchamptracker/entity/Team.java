@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -16,7 +17,12 @@ import java.util.List;
 @NoArgsConstructor
 public class Team extends BaseEntity {
     private String name;
-    private int week;
+    private LocalDateTime createdAt;
     @OneToMany()
     private List<Player> players;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
 }
