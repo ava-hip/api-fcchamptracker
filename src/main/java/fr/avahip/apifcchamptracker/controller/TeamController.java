@@ -1,5 +1,6 @@
 package fr.avahip.apifcchamptracker.controller;
 
+import fr.avahip.apifcchamptracker.dto.TeamDto;
 import fr.avahip.apifcchamptracker.entity.Team;
 import fr.avahip.apifcchamptracker.service.TeamService;
 import org.springframework.web.bind.annotation.*;
@@ -16,19 +17,19 @@ public class TeamController {
         this.service = service;
     }
 
-    @RequestMapping
-    public List<Team> findAll() {
+    @GetMapping
+    public List<TeamDto> findAll() {
         return service.findAll();
     }
 
-    @RequestMapping("/{id}")
-    public Optional<Team> findById(@PathVariable long id) {
+    @GetMapping("/{id}")
+    public Optional<TeamDto> findById(@PathVariable long id) {
         return service.findById(id);
     }
 
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
-    public Team save(@RequestBody Team team) {
-        return service.saveOrUpdate(team);
+    public Team save(@RequestBody TeamDto dto) {
+        return service.saveOrUpdate(dto);
     }
 
     @DeleteMapping("/{id}")
