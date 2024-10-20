@@ -13,6 +13,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13  # Utilise l'image Docker PostgreSQL version 13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: testdb  # Nom de la base de données
+          POSTGRES_USER: testuser  # Nom de l'utilisateur
+          POSTGRES_PASSWORD: testpassword  # Mot de passe de l'utilisateur
+        options: >-
+          --health-cmd="pg_isready -U testuser"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       # Vérifier le code depuis le dépôt
       - name: Checkout code
