@@ -42,9 +42,9 @@ jobs:
 
       - name: Wait for PostgreSQL
         run: |
-          until docker exec postgres pg_isready -U testuser; do
-            echo "Waiting for PostgreSQL...";
-            sleep 5;
+          until pg_isready -h localhost -p 5432 -U testuser; do
+           echo "Waiting for PostgreSQL...";
+           sleep 5;
           done
 
       # Construire l'application avec Maven
