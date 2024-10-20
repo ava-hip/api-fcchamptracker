@@ -1,48 +1,77 @@
-name: build and deploy spring-api
+name: api-fcchamptracker workflow
 on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - '.github/workflows/app-workflow.yaml'
   push:
-    branches:
-      - main
-
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - '.github/workflows/app-workflow.yaml'
 jobs:
-  build-deploy:
-    name: build and deploy spring-api
-    runs-on: ubuntu-20.04
+  project-build:
+    runs-on: ubuntu-latest
     steps:
-      - name: checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: setup jdk 17
+      - name: setup jdk17
         uses: actions/setup-java@v3
         with:
+          java-version: '17'
           distribution: 'corretto'
-          java-version: 17
 
-      - name: unit tests
-        run: mvn -B test --file pom.xml
-
-      - name: build the app
-        run: |
-          mvn clean
-          mvn -B package --file pom.xml
-      - name: build the docker image
-        uses: docker/build-push-action@v4
+      - name: setup maven dependencies caching
+        uses: actions/checkout@v3
         with:
-          context: .
-          dockerfile: Dockerfile
-          push: false
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/api-fcchamptracker:latest
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
-      - name: login to docker hub
-        uses: docker/login-action@v1
+      - name: install maven dependencies
+        run: mvn install
+
+  #      - name: run tests
+  #        run: mvn --batch-mode --update-snapshots verify
+
+  docker-build:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - project-build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup jdk17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Dashboard to Docker Hub
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: push the docker image to docker hub
+      - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
-          dockerfile: Dockerfile
+          file: Dockerfile-app
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rest-api:latest
+          tags: avahip/fc-champtracker:latest
