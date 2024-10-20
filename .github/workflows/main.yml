@@ -1,6 +1,5 @@
-name: build docker image
+name: Build and Push Docker Image
 
-# se déclenche à chaque push ou pullrequest sur main
 on:
   push:
     branches:
@@ -14,29 +13,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Vérifier le code depuis le dépôt
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Configurer Java (si nécessaire pour construire l'application Spring Boot)
-      - name: setup JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'corretto'
           java-version: '17'
 
-      # Construire l'application avec Maven
-      - name: build with Maven
-        run: mvn clean install
+      - name: Set up Maven cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-      # Se connecter à GitHub Packages Docker Registry
+      - name: Build with Maven
+        run: mvn clean package
+
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # Construire l'image Docker
-      - name: Build Docker Image
-        run: docker build . -t ghcr.io/${{ github.repository_owner }}/api-fcchamptracker:latest
+      - name: Build Docker image
+        run: docker build . -t ghcr.io/${{ github.repository }}/api-fcchamptracker:latest
 
-      # Pousser l'image vers GitHub Packages
-      - name: Push Docker Image
-        run: docker push ghcr.io/${{ github.repository_owner }}/api-fcchamptracker:latest
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository }}/api-fcchamptracker:latest
