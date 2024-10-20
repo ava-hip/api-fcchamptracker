@@ -37,8 +37,15 @@ jobs:
       - name: setup JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'corretto'  # Utilise la distribution AdoptOpenJDK/Temurin
+          distribution: 'corretto'
           java-version: '17'
+
+      - name: Wait for PostgreSQL
+        run: |
+          until docker exec postgres pg_isready -U testuser; do
+            echo "Waiting for PostgreSQL...";
+            sleep 5;
+          done
 
       # Construire l'application avec Maven
       - name: build with Maven
@@ -58,8 +65,8 @@ jobs:
 
       # Construire l'image Docker
       - name: Build Docker Image
-        run: docker build . -t ghcr.io/${{ github.repository_owner }}/your-image-name:latest
+        run: docker build . -t ghcr.io/${{ github.repository_owner }}/api-fcchamptracker:latest
 
       # Pousser l'image vers GitHub Packages
       - name: Push Docker Image
-        run: docker push ghcr.io/${{ github.repository_owner }}/your-image-name:latest
+        run: docker push ghcr.io/${{ github.repository_owner }}/api-fcchamptracker:latest
