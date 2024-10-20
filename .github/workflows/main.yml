@@ -13,21 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:13  # Utilise l'image Docker PostgreSQL version 13
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_DB: testdb  # Nom de la base de données
-          POSTGRES_USER: testuser  # Nom de l'utilisateur
-          POSTGRES_PASSWORD: testpassword  # Mot de passe de l'utilisateur
-        options: >-
-          --health-cmd="pg_isready -U testuser"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       # Vérifier le code depuis le dépôt
       - name: Checkout code
@@ -40,24 +25,9 @@ jobs:
           distribution: 'corretto'
           java-version: '17'
 
-      - name: Wait for PostgreSQL
-        run: |
-          until pg_isready -h localhost -p 5432 -U testuser; do
-           echo "Waiting for PostgreSQL...";
-           sleep 5;
-          done
-
       # Construire l'application avec Maven
       - name: build with Maven
-        run: mvn clean package
-
-      # test
-      - name: Run tests
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
-          SPRING_DATASOURCE_USERNAME: testuser
-          SPRING_DATASOURCE_PASSWORD: testpassword
-        run: mvn test
+        run: mvn clean install
 
       # Se connecter à GitHub Packages Docker Registry
       - name: Log in to GitHub Container Registry
