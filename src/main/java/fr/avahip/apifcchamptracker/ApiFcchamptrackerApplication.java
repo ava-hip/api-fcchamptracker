@@ -15,6 +15,7 @@ public class ApiFcchamptrackerApplication {
     @Bean
     public WebMvcConfigurer myMvcConfigurer() {
 
+        // resolve CORS error
         return new WebMvcConfigurer() {
 
             // CORS ORIGIN
