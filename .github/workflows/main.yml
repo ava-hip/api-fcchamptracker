@@ -38,7 +38,7 @@ jobs:
 
       - name: Build Docker image
         env:
-          SPRING_DATASOURCE_URL: ${{ secrets.DATABASE_URL }}
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/ma_base
           SPRING_DATASOURCE_USERNAME: ${{ secrets.DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: docker build . -t ghcr.io/${{ github.repository }}/api-fcchamptracker:latest
