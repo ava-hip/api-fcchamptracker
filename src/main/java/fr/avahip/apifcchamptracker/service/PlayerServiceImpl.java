@@ -39,6 +39,11 @@ public class PlayerServiceImpl implements PlayerService {
         repository.deleteById(id);
     }
 
+    @Override
+    public List<PlayerDto> findByTeam(long id) {
+        return toDto(repository.findByTeam_Id(id));
+    }
+
     public PlayerDto toDto(Player entity) {
         return mapper.toDto(entity);
     }

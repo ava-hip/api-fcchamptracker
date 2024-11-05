@@ -11,4 +11,5 @@ public interface PlayerService {
     Optional<PlayerDto> findById(long id);
     Player saveOrUpdate(PlayerDto dto);
     void deleteById(long id);
+    List<PlayerDto> findByTeam(long id);
 }
