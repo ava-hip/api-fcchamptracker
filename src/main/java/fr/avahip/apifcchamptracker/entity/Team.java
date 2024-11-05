@@ -18,7 +18,7 @@ import java.util.List;
 public class Team extends BaseEntity {
     private String name;
     private LocalDateTime createdAt;
-    @OneToMany()
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
     private List<Player> players;
 
     @PrePersist

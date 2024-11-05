@@ -36,4 +36,9 @@ public class PlayerController {
     public void deleteById(@PathVariable long id) {
         service.deleteById(id);
     }
+
+    @GetMapping("/team/{id}")
+    public List<PlayerDto> getAllByPassageId(@PathVariable long id) {
+        return service.findByTeam(id);
+    }
 }
