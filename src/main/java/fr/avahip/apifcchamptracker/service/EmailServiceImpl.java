@@ -21,7 +21,7 @@ import static org.springframework.mail.javamail.MimeMessageHelper.MULTIPART_MODE
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
-    private final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+    private final SpringTemplateEngine templateEngine;
 
 
     @Override
@@ -52,11 +52,9 @@ public class EmailServiceImpl implements EmailService {
         Context context = new Context();
         context.setVariables(properties);
 
-        helper.setFrom("dev@avalance.fr");
+        helper.setFrom("dev@uttracker.fr");
         helper.setTo(to);
         helper.setSubject(subject);
-
-        System.out.println(templateName);
 
         String template = templateEngine.process(templateName, context);
 
