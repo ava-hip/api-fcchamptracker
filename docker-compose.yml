@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  fcchamptracker-db:
+    container_name: fcchamptracker-db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres-vol:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    restart: unless-stopped
+
+  fcchamptracker-api:
+    container_name: fcchamptracker-api
+    image: ghcr.io/ava-hip/api-fcchamptracker/api-fcchamptracker:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./configs:/app/api/configs
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://fcchamptracker-db:5432/${POSTGRES_DB}
+        SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+        SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+
+  mail-dev:
+    container_name: mail-dev-bsn
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
