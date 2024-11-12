@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>fr.avahip</groupId>
-    <artifactId>ut-tracker-api</artifactId>
+    <artifactId>api-fcchamptracker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>api-fcchamptracker</name>
     <description>api-fcchamptracker</description>
