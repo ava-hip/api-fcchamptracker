@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  fcchamptracker-db:
+  ut-tracker-db:
     container_name: fcchamptracker-db
     image: postgres:latest
     ports:
@@ -14,15 +14,15 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     restart: unless-stopped
 
-  fcchamptracker-api:
+  ut-tracker-api:
     container_name: fcchamptracker-api
-    image: ghcr.io/ava-hip/api-fcchamptracker/api-fcchamptracker:latest
+    image: ghcr.io/ava-hip/ut-tracker-api/ut-tracker-api:latest
     ports:
       - "8080:8080"
     volumes:
       - ./configs:/app/api/configs
     environment:
-        SPRING_DATASOURCE_URL: jdbc:postgresql://fcchamptracker-db:5432/${POSTGRES_DB}
+        SPRING_DATASOURCE_URL: jdbc:postgresql://ut-tracker-db:5432/${POSTGRES_DB}
         SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
         SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
 
