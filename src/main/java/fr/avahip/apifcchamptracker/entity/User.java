@@ -1,10 +1,7 @@
 package fr.avahip.apifcchamptracker.entity;
 
 import fr.avahip.apifcchamptracker.generic.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -32,13 +29,14 @@ public class User extends BaseEntity implements UserDetails, Principal {
     private String email;
     private boolean accountLocked;
     private boolean enabled;
-
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDate createdDate;
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDate lastModifiedDate;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Team> teams;
 
     @Override
     public String getName() {
@@ -57,7 +55,7 @@ public class User extends BaseEntity implements UserDetails, Principal {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

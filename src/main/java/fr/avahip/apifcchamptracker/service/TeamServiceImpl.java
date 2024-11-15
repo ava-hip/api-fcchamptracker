@@ -20,9 +20,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<TeamDto> findAll() {
-        return toDto(repository.findAll());
-    }
+    public List<TeamDto> findAll() {return toDto(repository.findAll());}
 
     @Override
     public Optional<TeamDto> findById(long id) {
@@ -37,6 +35,11 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void deleteById(long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<TeamDto> findByUserEmail(String email) {
+        return toDto(repository.findByUser_Email(email));
     }
 
     public TeamDto toDto(Team entity) {

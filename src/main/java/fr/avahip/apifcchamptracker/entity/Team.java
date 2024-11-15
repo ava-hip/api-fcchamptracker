@@ -20,9 +20,13 @@ public class Team extends BaseEntity {
     private LocalDateTime createdAt;
     @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
     private List<Player> players;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_email", referencedColumnName = "email", nullable = false)
+    private User user;
 
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
     }
+
 }

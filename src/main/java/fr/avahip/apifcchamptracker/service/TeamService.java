@@ -11,4 +11,5 @@ public interface TeamService {
     Optional<TeamDto> findById(long id);
     Team saveOrUpdate(TeamDto dto);
     void deleteById(long id);
+    List<TeamDto> findByUserEmail(String email);
 }

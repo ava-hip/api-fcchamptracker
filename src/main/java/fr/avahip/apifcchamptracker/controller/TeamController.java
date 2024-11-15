@@ -18,9 +18,7 @@ public class TeamController {
     }
 
     @GetMapping
-    public List<TeamDto> findAll() {
-        return service.findAll();
-    }
+    public List<TeamDto> findAll() {return service.findAll();}
 
     @GetMapping("/{id}")
     public Optional<TeamDto> findById(@PathVariable long id) {
@@ -36,4 +34,7 @@ public class TeamController {
     public void deleteById(@PathVariable long id) {
         service.deleteById(id);
     }
+
+    @GetMapping("/all/{email}")
+    public List<TeamDto> findByEmail(@PathVariable String email) {return service.findByUserEmail(email);}
 }
