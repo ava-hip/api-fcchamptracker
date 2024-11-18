@@ -1,5 +1,6 @@
 package fr.avahip.apifcchamptracker.service;
 
+import fr.avahip.apifcchamptracker.dto.UserDto;
 import fr.avahip.apifcchamptracker.entity.Token;
 import fr.avahip.apifcchamptracker.entity.User;
 import fr.avahip.apifcchamptracker.repository.TokenRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -83,7 +85,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = (User) authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()))
                 .getPrincipal();
-        return AuthenticationResponse.builder().token(jwtService.generateToken(Map.of("email", user.getEmail()), user)).build();
+        return AuthenticationResponse.builder()
+                .token(jwtService.generateToken(Map.of("email", user.getEmail()), user))
+                .user(List.of(new UserDto(user.getUsername(), user.getEmail())))
+                .build();
     }
 
     @Override
