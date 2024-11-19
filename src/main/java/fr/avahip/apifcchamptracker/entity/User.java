@@ -53,6 +53,10 @@ public class User extends BaseEntity implements UserDetails, Principal {
         return password;
     }
 
+    public String getNonEmailUsername() {
+        return username;
+    }
+
     @Override
     public String getUsername() {
         return email;

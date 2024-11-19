@@ -87,7 +87,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .getPrincipal();
         return AuthenticationResponse.builder()
                 .token(jwtService.generateToken(Map.of("email", user.getEmail()), user))
-                .users(List.of(new UserDto(user.getUsername(), user.getEmail())))
+                .users(List.of(new UserDto(user.getNonEmailUsername(), user.getEmail())))
                 .build();
     }
 
