@@ -12,5 +12,5 @@ import java.util.List;
 @Builder
 public class AuthenticationResponse {
     private String token;
-    private List<UserDto> user;
+    private List<UserDto> users;
 }
